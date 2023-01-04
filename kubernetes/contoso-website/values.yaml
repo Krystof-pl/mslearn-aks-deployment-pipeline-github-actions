@@ -1,0 +1,7 @@
+image:
+  registry: livetealacr.azurecr.io
+  name: contoso-website
+  tag: latest
+
+dns:
+  name: aks-kost.westeurope.cloudapp.azure.com
