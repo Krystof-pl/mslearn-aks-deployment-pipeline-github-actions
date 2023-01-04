@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: contoso-{{ default "staging" .Release.Namespace }}.{{ .Values.dns.name }}
+    - host: {{ .Values.dns.name }}
       http:
         paths:
           - backend:
