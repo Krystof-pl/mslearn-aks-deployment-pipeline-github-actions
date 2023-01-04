@@ -39,6 +39,11 @@ jobs:
         uses: Azure/setup-helm@v3
         with:
           version: v3.10.3
+          
+      - name: Azure Login
+        uses: Azure/login@v1.4.6
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Azure Kubernetes set context
         uses: Azure/aks-set-context@v3
