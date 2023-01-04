@@ -40,12 +40,17 @@ jobs:
         with:
           version: v3.10.3
           
+      - name: Azure Login
+        uses: Azure/login@v1.4.6
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+             
       - name: Azure Kubernetes set context
         uses: Azure/aks-set-context@v3
         with:
           resource-group: live-teal-rg
           cluster-name: live-teal-aks
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          admin: true
           
       - name: Run Helm Deploy
         run:
