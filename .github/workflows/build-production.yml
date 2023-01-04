@@ -32,3 +32,31 @@ jobs:
           context: .
           push: true
           tags: ${{secrets.ACR_NAME}}/contoso-website:latest,${{secrets.ACR_NAME}}/contoso-website:${{ steps.fetch_version.outputs.TAG }}
+          
+  deploy:
+    runs-on: ubuntu-20.04
+    needs: build_push_image
+
+    steps:
+      - uses: actions/checkout@v2
+    
+      - name: Install Helm
+        uses: Azure/setup-helm@v3
+        with:
+          version: v3.10.3
+          
+      - name: Azure Login
+        uses: Azure/login@v1.4.6
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+             
+      - name: Azure Kubernetes set context
+        uses: Azure/aks-set-context@v3
+        with:
+          resource-group: live-teal-rg
+          cluster-name: live-teal-aks
+          admin: true
+          
+      - name: Run Helm Deploy
+        run:
+          helm upgrade --install --create-namespace --atomic --wait --namespace production contoso-website ./kubernetes/contoso-website --set image.repository=${{ secrets.ACR_NAME }} --set image.tag=${GITHUB_REF##*/}
