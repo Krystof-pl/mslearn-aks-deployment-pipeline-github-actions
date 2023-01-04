@@ -27,3 +27,22 @@ jobs:
           context: .
           push: true
           tags: ${{secrets.ACR_NAME}}/contoso-website:latest
+
+  deploy:
+    runs-on: ubuntu-20.04
+    needs: build_push_image
+
+    steps:
+      - uses: actions/checkout@v2
+    
+      - name: Install Helm
+        uses: Azure/setup-helm@v1
+        with:
+          version: v3.3.1
+
+      - name: Azure Kubernetes set context
+        uses: Azure/aks-set-context@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          resource-group: live-teal-rg
+          cluster-name: live-teal-aks
